@@ -1,11 +1,36 @@
-# Plant Health Checker - Data Preparation, Training & Model Comparison
+<div align="center">
 
-Loading, visualizing, and preprocessing the **PlantVillage** plant disease
-dataset, then training and comparing four transfer-learning models:
-**ResNet50** (main model), **DenseNet121**, **MobileNetV3-Large**, and
-**ConvNeXt-Tiny**.
+# 🌿 Plant Health Checker
 
-## Project Structure
+**Deep Learning pipeline for plant disease classification — data preparation, multi-model training, and side-by-side comparison.**
+
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Try_it_Now-2ea44f?style=for-the-badge)](https://mohamedeslam111.github.io/plant-health-web)
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](#license)
+
+**[🚀 Live Demo](https://mohamedeslam111.github.io/plant-health-web)** · [Project Structure](#-project-structure) · [Setup](#-setup) · [Outputs](#-outputs)
+
+</div>
+
+---
+
+## 📖 Overview
+
+This project loads, visualizes, and preprocesses the **PlantVillage** plant disease dataset, then trains and compares four transfer-learning architectures to find the best model for automated plant disease detection:
+
+| Model | Highlight |
+|---|---|
+| 🏆 **ResNet50** | Main project model |
+| **DenseNet121** | Dense connections, strong baseline |
+| **MobileNetV3-Large** | Lightweight — mobile/edge-deployment friendly |
+| **ConvNeXt-Tiny** | Modern convolutional architecture |
+
+A trained version of the model powers the **[live web demo](https://mohamedeslam111.github.io/plant-health-web)**, where you can upload a leaf image and get an instant health diagnosis.
+
+---
+
+## 🗂 Project Structure
 
 ```
 plant_health_checker/
@@ -17,21 +42,14 @@ plant_health_checker/
 ├── train.py                # Training loop, early stopping, checkpointing
 ├── evaluate.py              # Metrics, confusion matrix, prediction visualization
 ├── compare_models.py        # Side-by-side model comparison table, chart, report
-├── main.py                  # Orchestrates the full pipeline, run this file
+├── main.py                  # Orchestrates the full pipeline — run this file
 ├── requirements.txt
 └── README.md
 ```
 
-## Models Compared
+---
 
-| Model               | Notes                                          |
-|---------------------|-------------------------------------------------|
-| ResNet50            | Main project model                              |
-| DenseNet121         | Dense connections, strong baseline              |
-| MobileNetV3-Large   | Lightweight, mobile/edge-deployment friendly    |
-| ConvNeXt-Tiny       | Modern convolutional architecture               |
-
-## Pipeline Steps (run via `main.py`)
+## ⚙️ Pipeline Steps (run via `main.py`)
 
 1. Load dataset and explore basic statistics
 2. Extract plant species information from class names
@@ -46,56 +64,53 @@ plant_health_checker/
 11. For **each model** in `config.MODELS_TO_COMPARE`:
     - Build the model (pretrained on ImageNet)
     - Train with early stopping + best-checkpoint saving
-    - Evaluate on the test set: accuracy, precision, recall, F1,
-      classification report, confusion matrix, top confusions,
-      best/worst classes, and sample predictions
-12. **Compare all models side-by-side**: results table, bar chart,
-    overlaid training curves, and a written comparison report
+    - Evaluate on the test set: accuracy, precision, recall, F1, classification report, confusion matrix, top confusions, best/worst classes, and sample predictions
+12. **Compare all models side-by-side**: results table, bar chart, overlaid training curves, and a written comparison report
 
-## Setup
+---
 
-1. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+## 🚀 Setup
 
-2. Update the dataset path in `config.py` (or set the `PLANT_DATA_DIR`
-   environment variable):
-   ```python
-   DATA_DIR = 'path/to/your/PlantVillage/dataset'
-   ```
+**1. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
 
-   Expected dataset structure:
-   ```
-   PlantVillage/
-   ├── Apple___Apple_scab/
-   ├── Apple___Black_rot/
-   ├── Tomato___Late_blight/
-   └── ...
-   ```
+**2. Set the dataset path** in `config.py` (or via the `PLANT_DATA_DIR` environment variable):
+```python
+DATA_DIR = 'path/to/your/PlantVillage/dataset'
+```
 
-   **Running on Google Colab:** mount your Drive first, then either set
-   the `PLANT_DATA_DIR` environment variable or edit `DATA_DIR` directly:
-   ```python
-   from google.colab import drive
-   drive.mount('/content/drive')
-   ```
+Expected dataset structure:
+```
+PlantVillage/
+├── Apple___Apple_scab/
+├── Apple___Black_rot/
+├── Tomato___Late_blight/
+└── ...
+```
 
-3. (Optional) Change which models are compared in `config.py`:
-   ```python
-   MODELS_TO_COMPARE = ['resnet50', 'densenet121', 'mobilenet_v3_large', 'convnext_tiny']
-   ```
+> **Running on Google Colab?** Mount your Drive first, then set `PLANT_DATA_DIR` or edit `DATA_DIR` directly:
+> ```python
+> from google.colab import drive
+> drive.mount('/content/drive')
+> ```
 
-4. Run the full pipeline:
-   ```
-   python main.py
-   ```
+**3. (Optional) Choose which models to compare** in `config.py`:
+```python
+MODELS_TO_COMPARE = ['resnet50', 'densenet121', 'mobilenet_v3_large', 'convnext_tiny']
+```
 
-## Adding another model to the comparison
+**4. Run the full pipeline**
+```bash
+python main.py
+```
 
-Open `model.py` and:
-1. Write a `build_<name>(num_classes)` function that loads a pretrained
-   model and replaces its final classification layer.
+---
+
+## ➕ Adding Another Model to the Comparison
+
+1. Open `model.py` and write a `build_<name>(num_classes)` function that loads a pretrained model and replaces its final classification layer.
 2. Register it in `MODEL_REGISTRY`:
    ```python
    MODEL_REGISTRY = {
@@ -106,13 +121,13 @@ Open `model.py` and:
        'efficientnet_b0': build_efficientnet_b0,  # new entry
    }
    ```
-3. Add the name to `config.MODELS_TO_COMPARE`. `main.py` will train,
-   evaluate, and include it in the comparison automatically.
+3. Add the name to `config.MODELS_TO_COMPARE`. `main.py` will train, evaluate, and include it in the comparison automatically.
 
-## Outputs
+---
 
-Results are saved to `./plant_project_results/`, with one subfolder
-per model so nothing overwrites:
+## 📊 Outputs
+
+Results are saved to `./plant_project_results/`, with one subfolder per model so nothing overwrites:
 
 ```
 plant_project_results/
@@ -136,28 +151,42 @@ plant_project_results/
     └── comparison_report.txt          # written summary + best model per metric
 ```
 
-## Comparison Metrics
+---
+
+## 📈 Comparison Metrics
 
 The final comparison (`compare_models.py`) reports, for each model:
 
-| Metric                          | Why it matters                          |
-|----------------------------------|------------------------------------------|
-| Test Accuracy / Macro F1 / Weighted F1 | Overall classification quality      |
-| Macro Precision / Recall         | Per-class performance, unweighted        |
-| Best Val Accuracy / Loss / Epoch | Training convergence behavior            |
-| Total Train Time (minutes)       | Training cost                            |
-| Avg Inference Time (ms/image)    | Deployment / real-time suitability       |
-| Trainable Parameters (millions)  | Model size / complexity                  |
+| Metric | Why It Matters |
+|---|---|
+| Test Accuracy / Macro F1 / Weighted F1 | Overall classification quality |
+| Macro Precision / Recall | Per-class performance, unweighted |
+| Best Val Accuracy / Loss / Epoch | Training convergence behavior |
+| Total Train Time (minutes) | Training cost |
+| Avg Inference Time (ms/image) | Deployment / real-time suitability |
+| Trainable Parameters (millions) | Model size / complexity |
 
-## Configuration
+---
+
+## 🔧 Configuration
 
 Key hyperparameters (in `config.py`):
 
-| Parameter         | Default  |
-|-------------------|----------|
-| `BATCH_SIZE`      | 32       |
-| `IMG_SIZE`        | 224      |
-| `LEARNING_RATE`   | 0.0001   |
-| `NUM_EPOCHS`      | 10       |
-| `EARLY_STOP_PATIENCE` | 3    |
+| Parameter | Default |
+|---|---|
+| `BATCH_SIZE` | 32 |
+| `IMG_SIZE` | 224 |
+| `LEARNING_RATE` | 0.0001 |
+| `NUM_EPOCHS` | 10 |
+| `EARLY_STOP_PATIENCE` | 3 |
 | `MODELS_TO_COMPARE` | `['resnet50', 'densenet121', 'mobilenet_v3_large', 'convnext_tiny']` |
+
+---
+
+<div align="center">
+
+### 🌐 [Try the Live Demo →](https://mohamedeslam111.github.io/plant-health-web)
+
+Made with 🌱 by [Mohamed Eslam](https://github.com/MohamedEslam111)
+
+</div>
